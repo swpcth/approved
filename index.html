@@ -1,29 +1,261 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบตรวจสอบหน่วยคะแนนการศึกษาต่อเนื่อง</title> <link rel="icon" type="image/png" href="https://img1.pic.in.th/images/11zon_cropped-69920d554baea9a3.png">
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden; 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบตรวจสอบหน่วยคะแนนโครงการที่สภาวิชาชีพสังคมสงเคราะห์รับรอง</title><link rel="icon" type="image/png" href="https://img1.pic.in.th/images/11zon_cropped-69920d554baea9a3.png">
+  <meta name="description" content="ค้นหาโครงการและหน่วยคะแนนการศึกษาต่อเนื่อง (CE) ที่สภาวิชาชีพสังคมสงเคราะห์รับรอง พร้อมประกาศรายชื่อผู้เข้าอบรม">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'c-red': '#E61C2A',    /* สีแดง */
+            'c-sky': '#1178A3',    /* สีฟ้า */
+            'c-navy': '#1C3868',   /* สีน้ำเงิน */
+            'c-main': '#d97706',   /* สีส้มทอง */
+            'c-black': '#1D1D1B',  /* สีดำ */
+          },
+          fontFamily: {
+            'sans': ['Sarabun', 'sans-serif'],
+          }
         }
-        iframe {
-            border: none;
-            width: 100%;
-            height: 100vh; 
-            display: block;
-        }
-    </style>
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <iframe src="https://script.google.com/macros/s/AKfycbzdyvOUsVK-S4XIz0QOk8WMC-K9K0hoRJy9oE5vZtBZqP6RQyLvFudpEwsdq6Qt2up8/exec">
-        Browser ของคุณไม่รองรับ iframe
-    </iframe>
+  <header class="bg-white shadow-md">
+    <div class="h-2 w-full bg-gradient-to-r from-c-red via-c-navy to-c-sky"></div>
+    <div class="container mx-auto px-4 py-4">
+      <div class="flex items-center gap-5">
+        <div class="flex-shrink-0">
+           <img src="https://img1.pic.in.th/images/11zon_cropped-06534455f9f7ab36.png" alt="ตราสัญลักษณ์สภาวิชาชีพสังคมสงเคราะห์" class="h-20 w-auto drop-shadow-sm hover:scale-105 transition-transform duration-300">
+        </div>
+        <div class="border-l-4 border-c-red pl-5">
+          <h1 class="text-xl md:text-2xl font-bold text-c-navy tracking-tight leading-none mb-1">ระบบตรวจสอบหน่วยคะแนนการศึกษาต่อเนื่อง</h1>
+          <h2 class="text-sm md:text-base text-c-sky font-semibold tracking-wide uppercase">โครงการที่สภาวิชาชีพสังคมสงเคราะห์รับรอง</h2>
+        </div>
+      </div>
+    </div>
+  </header>
 
+  <div class="container mx-auto px-4 py-8 max-w-7xl">
+
+    <!-- แจ้งเตือนถ้ายังไม่ได้ตั้งค่า API URL -->
+    <div id="api-config-warning" class="hidden mb-6 p-4 rounded-xl border-2 border-c-red bg-red-50 text-c-red text-sm font-semibold">
+      <i class="fas fa-triangle-exclamation mr-1"></i>
+      ยังไม่ได้ตั้งค่า API_BASE_URL ในไฟล์ <code>app.js</code> — โปรดใส่ URL ของ Google Apps Script Web App ที่ deploy แล้ว (ลงท้ายด้วย /exec)
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 px-1">
+
+      <button onclick="switchTab('searchCredits')" id="tab-credits"
+              class="relative w-full p-6 rounded-2xl border-2 transition-all duration-300 ease-out
+                     flex flex-col items-center justify-center gap-4 cursor-pointer select-none text-center
+                     bg-c-navy border-c-main text-white shadow-xl scale-[1.02] ring-2 ring-offset-2 ring-c-navy z-10 group"
+              role="tab" aria-selected="true" aria-controls="section-credits">
+
+        <div class="w-16 h-16 rounded-full flex items-center justify-center text-3xl transition-colors shadow-inner mb-1
+                    bg-white/20 text-white">
+           <i class="fas fa-search"></i>
+        </div>
+
+        <div class="flex flex-col items-center justify-center w-full">
+           <h3 class="text-lg md:text-xl font-bold leading-tight mb-2 text-white">
+             ค้นหาโครงการ/หน่วยคะแนน
+           </h3>
+           <p class="text-sm font-light opacity-90 text-gray-200">
+             ที่สภาวิชาชีพสังคมสงเคราะห์รับรอง
+           </p>
+        </div>
+      </button>
+
+      <button onclick="switchTab('searchNameList')" id="tab-namelist"
+              class="relative w-full p-6 rounded-2xl border-2 transition-all duration-300 ease-out
+                     flex flex-col items-center justify-center gap-4 cursor-pointer select-none text-center
+                     bg-white border-gray-200 text-gray-400 hover:bg-white hover:border-c-sky/50 hover:text-c-navy hover:shadow-md group"
+              role="tab" aria-selected="false" aria-controls="section-namelist">
+
+        <div class="w-16 h-16 rounded-full flex items-center justify-center text-3xl transition-colors shadow-inner mb-1
+                    bg-gray-100 text-gray-400 group-hover:text-c-navy group-hover:bg-c-navy/10">
+           <i class="fas fa-list-alt"></i>
+        </div>
+
+        <div class="flex flex-col items-center justify-center w-full">
+           <h3 class="text-lg md:text-xl font-bold leading-tight mb-2 text-c-black group-hover:text-c-navy">
+             ค้นหาประกาศรายชื่อผู้เข้าอบรม
+           </h3>
+           <p class="text-sm font-light opacity-90 text-gray-500 group-hover:text-c-navy/70">
+             กิจกรรมที่สภาวิชาชีพฯ จัด
+           </p>
+        </div>
+      </button>
+
+    </div>
+
+    <div id="section-credits" class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 animate-fade-in min-h-[500px]" role="tabpanel">
+
+      <div class="bg-gray-100 p-6 rounded-xl border border-gray-300 mb-8 shadow-inner">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-end">
+          <div class="md:col-span-1">
+            <label class="block text-c-navy text-base font-bold mb-2 ml-1" for="year-select">
+              <i class="fas fa-calendar-alt mr-1"></i> ปีที่จัด (พ.ศ.)
+            </label>
+            <select id="year-select" class="input-field cursor-pointer font-semibold" onchange="fetchCreditsData(this.value)">
+              <option value="">ทั้งหมด</option>
+              <option value="2569" selected>2569</option>
+              <option value="2568">2568</option>
+              <option value="2567">2567</option>
+              <option value="2566">2566</option>
+              <option value="2565">2565</option>
+              <option value="2564">2564</option>
+              <option value="2559-2563">2559-2563</option>
+              <option value="SWPC before 65">จัดโดยสภาฯ ก่อน 65</option>
+            </select>
+          </div>
+          <div class="md:col-span-4">
+            <label class="block text-c-navy text-base font-bold mb-2 ml-1" for="keyword-credits">
+              <i class="fas fa-search mr-1"></i> ค้นหา (ชื่อหน่วยงาน / ชื่อโครงการ)
+            </label>
+            <div class="relative w-full">
+               <input type="text" id="keyword-credits" class="input-field input-field-clearable" placeholder="พิมพ์ชื่อหน่วยงาน หรือ ชื่อโครงการ..." oninput="filterCreditsLocal()" autocomplete="off">
+               <span class="clear-btn hidden" id="clear-credits-keyword" onclick="clearKeyword('credits')" title="ล้างคำค้นหา" role="button" aria-label="ล้างคำค้นหา">
+                 <i class="fas fa-times"></i>
+               </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container shadow-md" id="result-area-credits">
+         <div class="px-4 py-2 bg-c-navy border-b border-c-sky flex flex-wrap gap-2 justify-between items-center">
+            <span class="text-sm font-bold text-white uppercase tracking-wide"><i class="fas fa-database mr-2"></i> ผลการค้นหา</span>
+            <div class="flex items-center gap-2">
+              <button class="toolbar-btn" onclick="exportToCSV('credits')" title="ดาวน์โหลดผลการค้นหาเป็นไฟล์ CSV (เปิดด้วย Excel ได้)">
+                <i class="fas fa-file-csv"></i> ดาวน์โหลด CSV
+              </button>
+              <span class="text-xs font-bold text-c-navy bg-white px-3 py-1 rounded-full shadow-sm" id="credits-count">รอโหลดข้อมูล...</span>
+            </div>
+         </div>
+
+        <!-- มุมมองตาราง: จอ md ขึ้นไป -->
+        <div class="overflow-x-auto hidden md:block">
+          <table class="table-fixed-layout text-left">
+            <thead>
+              <tr>
+                <th onclick="sortTable('credits', 1)" class="table-head table-head-sortable w-[20%]">
+                  ชื่อหน่วยงาน <i id="sort-credits-1" class="fas fa-sort ml-1 opacity-50 text-xs"></i>
+                </th>
+                <th onclick="sortTable('credits', 2)" class="table-head table-head-sortable w-[24%]">
+                  ชื่อโครงการ <i id="sort-credits-2" class="fas fa-sort ml-1 opacity-50 text-xs"></i>
+                </th>
+                <th onclick="sortTable('credits', 3)" class="table-head table-head-sortable text-center w-[12%]">
+                  วันที่จัด <i id="sort-credits-3" class="fas fa-sort ml-1 opacity-50 text-xs"></i>
+                </th>
+                <th class="table-head text-center w-[10%]">คะแนน<br><span class="opacity-80 font-normal text-xs">(ผู้เข้าอบรม)</span></th>
+                <th class="table-head w-[14%]">วิทยากร/ผู้จัด</th>
+                <th class="table-head text-center w-[10%]">คะแนน<br><span class="opacity-80 font-normal text-xs">(วิทยากร/ผู้จัด)</span></th>
+                <th class="table-head w-[10%]">หมายเหตุ</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-credits" class="text-c-black"></tbody>
+          </table>
+        </div>
+
+        <!-- มุมมองการ์ด: จอมือถือ -->
+        <div class="block md:hidden p-3 bg-gray-50" id="cards-credits"></div>
+      </div>
+    </div>
+
+    <div id="section-namelist" class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hidden animate-fade-in min-h-[500px]" role="tabpanel">
+
+      <div class="bg-gray-100 p-6 rounded-xl border border-gray-300 mb-8 shadow-inner">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-end">
+          <div class="md:col-span-1">
+            <label class="block text-c-navy text-base font-bold mb-2 ml-1" for="year-filter-namelist">
+              <i class="fas fa-calendar-alt mr-1"></i> ปีที่จัด
+            </label>
+            <select id="year-filter-namelist" class="input-field cursor-pointer font-semibold" onchange="filterNameListLocal()">
+              <option value="" selected>ทั้งหมด</option>
+              <option value="2569">2569</option>
+              <option value="2568">2568</option>
+              <option value="2567">2567</option>
+              <option value="2566">2566</option>
+              <option value="2565">2565</option>
+              <option value="2564">2564</option>
+            </select>
+          </div>
+          <div class="md:col-span-4">
+            <label class="block text-c-navy text-base font-bold mb-2 ml-1" for="keyword-namelist">
+              <i class="fas fa-search mr-1"></i> ค้นหา (ชื่อโครงการ)
+            </label>
+            <div class="relative w-full">
+               <input type="text" id="keyword-namelist" class="input-field input-field-clearable" placeholder="พิมพ์ชื่อโครงการ..." oninput="filterNameListLocal()" autocomplete="off">
+               <span class="clear-btn hidden" id="clear-namelist-keyword" onclick="clearKeyword('namelist')" title="ล้างคำค้นหา" role="button" aria-label="ล้างคำค้นหา">
+                 <i class="fas fa-times"></i>
+               </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container shadow-md" id="result-area-namelist">
+        <div class="px-4 py-2 bg-c-navy border-b border-c-sky flex flex-wrap gap-2 justify-between items-center">
+            <span class="text-sm font-bold text-white uppercase tracking-wide"><i class="fas fa-users mr-2"></i> ผลการค้นหา</span>
+            <div class="flex items-center gap-2">
+              <button class="toolbar-btn" onclick="exportToCSV('namelist')" title="ดาวน์โหลดผลการค้นหาเป็นไฟล์ CSV (เปิดด้วย Excel ได้)">
+                <i class="fas fa-file-csv"></i> ดาวน์โหลด CSV
+              </button>
+              <span class="text-xs font-bold text-c-navy bg-white px-3 py-1 rounded-full shadow-sm" id="namelist-count">รอโหลดข้อมูล...</span>
+            </div>
+         </div>
+
+        <!-- มุมมองตาราง: จอ md ขึ้นไป -->
+        <div class="overflow-x-auto hidden md:block">
+          <table class="table-fixed-layout">
+            <thead>
+              <tr>
+                <th class="table-head text-center w-[12%]">ปีที่จัด</th>
+                <th onclick="sortTable('namelist', 2)" class="table-head table-head-sortable w-[63%]">
+                  ชื่อกิจกรรม/โครงการ <i id="sort-namelist-2" class="fas fa-sort ml-1 opacity-50 text-xs"></i>
+                </th>
+                <th class="table-head text-center w-[25%]">สถานะ / ไฟล์รายชื่อ</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-namelist" class="text-c-black"></tbody>
+          </table>
+        </div>
+
+        <!-- มุมมองการ์ด: จอมือถือ -->
+        <div class="block md:hidden p-3 bg-gray-50" id="cards-namelist"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="text-center text-gray-500 text-sm py-8 mt-6">
+    <div class="mb-3">
+      <i class="fas fa-landmark text-c-navy/30 text-3xl"></i>
+    </div>
+    <p class="font-bold text-c-navy">&copy; สภาวิชาชีพสังคมสงเคราะห์ | Social Work Professional Council</p>
+  </footer>
+
+  <button class="ai-chat-btn" id="aiChatBtn" onclick="toggleChat()">
+    💬 คุยกับผู้ช่วยสภาฯ AI
+  </button>
+
+  <iframe src="https://script.google.com/macros/s/AKfycbwBuYpJZUv2USdBcNYzY0eZ2SQxgu9Kl2SEfWoLrwuZCo5D_UoBtPJvjn5770fo9wld6Q/exec" class="ai-chat-window" id="aiChatFrame" title="ผู้ช่วยสภาฯ AI"></iframe>
+
+  <script src="app.js"></script>
 </body>
 </html>
