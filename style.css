@@ -1,0 +1,91 @@
+body { background-color: #f3f4f6; color: #1D1D1B; font-family: 'Sarabun', sans-serif; }
+
+/* Input Style (ปรับ py-3 ให้สูงกำลังดี, px-4 เว้นขอบปกติไม่มีไอคอน) */
+.input-field {
+  width: 100%; padding: 0.75rem 1rem; border: 2px solid rgba(28,56,104,0.2); border-radius: 0.75rem;
+  font-size: 1rem; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.05); color: #1D1D1B;
+  transition: all 0.2s ease;
+}
+.input-field::placeholder { color: #9ca3af; }
+.input-field:focus { outline: none; border-color: #E61C2A; box-shadow: 0 0 0 1px #E61C2A; }
+
+/* ช่องค้นหาที่มีปุ่มล้าง (X) ต้องเผื่อพื้นที่ด้านขวา */
+.input-field-clearable { padding-right: 2.75rem; }
+
+.clear-btn {
+  position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+  width: 1.75rem; height: 1.75rem; display: flex; align-items: center; justify-content: center;
+  border-radius: 9999px; color: #9ca3af; cursor: pointer; transition: color 0.15s ease, background-color 0.15s ease;
+}
+.clear-btn:hover { color: #fff; background-color: #E61C2A; }
+
+/* Table Styling */
+.table-container { border: 1px solid rgba(29,29,27,0.2); border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem; overflow: hidden; }
+.table-fixed-layout { table-layout: fixed; width: 100%; border-collapse: collapse; }
+.table-head {
+  background-color: #1C3868; color: #fff; font-weight: 700; font-size: 1rem; text-transform: uppercase;
+  letter-spacing: 0.05em; padding: 1.25rem 0.5rem; vertical-align: middle; border-bottom: 4px solid #d97706;
+  border-right: 1px solid rgba(17,120,163,0.3); box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.table-head:last-child { border-right: none; }
+.table-head-sortable { cursor: pointer; user-select: none; position: relative; padding-right: 1.5rem; transition: background-color 0.15s ease; }
+.table-head-sortable:hover { background-color: rgba(17,120,163,0.8); }
+.table-row { background: #fff; transition: background-color 0.15s ease; }
+.table-row:hover { background-color: #eff6ff; }
+.table-cell {
+  padding: 1rem 0.75rem; font-size: 0.875rem; vertical-align: top; word-break: break-word;
+  border-bottom: 1px solid #d1d5db; border-right: 1px solid #d1d5db; color: #1D1D1B;
+}
+.table-cell:last-child { border-right: none; }
+
+/* Card view (มือถือ) */
+.card-item { background: #fff; border: 1px solid #e5e7eb; border-radius: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 1rem; margin-bottom: 0.75rem; }
+.card-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(28,56,104,0.6); margin-bottom: 0.25rem; }
+
+/* Toolbar button (Export ฯลฯ) */
+.toolbar-btn {
+  display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.75rem; font-weight: 700;
+  padding: 0.375rem 0.75rem; border-radius: 9999px; background: rgba(255,255,255,0.1); color: #fff;
+  border: 1px solid rgba(255,255,255,0.2); cursor: pointer; transition: background-color 0.15s ease;
+}
+.toolbar-btn:hover { background: rgba(255,255,255,0.2); }
+
+/* Skeleton loading */
+.skeleton-block { background-color: #e5e7eb; border-radius: 0.25rem; animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* Animation */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-in { animation: fadeIn 0.3s ease-out; }
+
+/* Focus ที่มองเห็นชัดเจนสำหรับผู้ใช้คีย์บอร์ด */
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+  outline: 3px solid #d97706; outline-offset: 2px;
+}
+
+/* ปุ่มเปิด-ปิดแชท */
+.ai-chat-btn {
+  position: fixed; bottom: 20px; right: 20px;
+  background: #1C3868;
+  color: white; border: none; border-radius: 50px;
+  padding: 12px 20px; font-size: 16px; font-weight: bold; cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 9999;
+  transition: background 0.3s ease;
+}
+.ai-chat-btn:hover { background: #1178A3; }
+
+/* หน้าต่างแชท iframe */
+.ai-chat-window {
+  position: fixed; bottom: 80px; right: 20px;
+  width: 380px; max-width: 92vw;
+  height: 600px; max-height: 75vh;
+  border: none;
+  background: transparent;
+  display: none; z-index: 9999;
+}
+
+/* จอมือถือ: ย่อปุ่มและขยับหน้าต่างแชทให้ไม่ล้นจอ/ไม่บังปุ่มค้นหา */
+@media (max-width: 480px) {
+  .ai-chat-btn { padding: 10px 16px; font-size: 14px; bottom: 14px; right: 14px; }
+  .ai-chat-window { right: 4vw; bottom: 78px; }
+}
