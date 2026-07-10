@@ -9,7 +9,7 @@
 
 // ⚠️ ต้องแก้ตรงนี้: ใส่ URL ของ Web App ที่ deploy จาก Google Apps Script (ลงท้ายด้วย /exec)
 // วิธีหา: เปิดโปรเจกต์ Apps Script > Deploy > New deployment > Web app > คัดลอก URL
-const API_BASE_URL = "https://script.google.com/macros/s/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/exec";
+const API_BASE_URL = "https://script.google.com/macros/s/AKfycbzdyvOUsVK-S4XIz0QOk8WMC-K9K0hoRJy9oE5vZtBZqP6RQyLvFudpEwsdq6Qt2up8/exec";
 
 // --- Global Variables ---
 let allCreditsData = [];
