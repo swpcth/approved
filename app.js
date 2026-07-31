@@ -370,9 +370,9 @@ function buildCreditsRowData(row) {
   let remarksRaw = row[9] || '-';
   let remarksHtml;
   if (remarksRaw.includes('เรียบร้อย') || remarksRaw.includes('นำเข้าแล้ว')) {
-      remarksHtml = `<div class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-xs font-bold text-center border border-emerald-300 shadow-sm"><i class="fas fa-check-circle"></i> ${esc(remarksRaw)}</div>`;
-  } else if (remarksRaw.includes('อยู่ระหว่างขออนุมัติ')) {
-      remarksHtml = `<div class="bg-amber-100 text-amber-800 px-2 py-1 rounded text-xs font-bold text-center border border-amber-300 shadow-sm"><i class="fas fa-clock"></i> ${esc(remarksRaw)}</div>`;
+      remarksHtml = `<div class="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 px-2.5 py-1.5 rounded text-xs font-bold text-center border border-emerald-300 shadow-sm w-full justify-center"><i class="fas fa-check-circle"></i> ${esc(remarksRaw)}</div>`;
+  } else if (remarksRaw.includes('อยู่ระหว่าง') || remarksRaw.includes('รอ') || remarksRaw.includes('กำลัง')) {
+      remarksHtml = `<div class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 px-2.5 py-1.5 rounded text-xs font-bold text-center border border-amber-300 shadow-sm w-full justify-center"><i class="fas fa-clock"></i> ${esc(remarksRaw)}</div>`;
   } else if (remarksRaw === '-') {
       remarksHtml = '<span class="text-gray-300">-</span>';
   } else {
