@@ -32,6 +32,17 @@ function esc(value) {
   return div.innerHTML;
 }
 
+// โลโก้บางโฮสต์ (เช่น pic.in.th) มีระบบกัน hotlink ตาม referrer โดเมน อาจโหลดไม่ขึ้นเมื่อย้ายไปอยู่คนละโดเมน (เช่น GitHub Pages)
+// ถ้าโหลดรูปไม่สำเร็จ ให้ขึ้นไอคอนแทนที่ แทนที่จะปล่อยให้ขึ้น alt text แตกๆ
+function handleLogoError(imgEl) {
+  imgEl.onerror = null;
+  const fallback = document.createElement('div');
+  fallback.className = 'h-20 w-20 rounded-full bg-c-navy flex items-center justify-center text-white shadow-sm';
+  fallback.innerHTML = '<i class="fas fa-landmark text-3xl"></i>';
+  fallback.title = 'ตราสัญลักษณ์สภาวิชาชีพสังคมสงเคราะห์';
+  imgEl.replaceWith(fallback);
+}
+
 // --- เรียก API กลาง: คืนค่าเป็น Promise<{status, data|message}> เสมอ ---
 async function callApi(action, params) {
   if (!API_BASE_URL || API_BASE_URL.includes('XXXXXXXX')) {
@@ -368,18 +379,30 @@ function buildCreditsRowData(row) {
   const speakerScoreHtml = (!row[7] && !row[8]) ? '<div class="text-center text-gray-300">-</div>' : createScoreBadge(row[7], 1) + createScoreBadge(row[8], 2);
 
   let remarksRaw = row[9] || '-';
-  let remarksHtml;
-  if (remarksRaw.includes('เรียบร้อย') || remarksRaw.includes('นำเข้าแล้ว')) {
-      remarksHtml = `<div class="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 px-2.5 py-1.5 rounded text-xs font-bold text-center border border-emerald-300 shadow-sm w-full justify-center"><i class="fas fa-check-circle"></i> ${esc(remarksRaw)}</div>`;
-  } else if (remarksRaw.includes('อยู่ระหว่าง') || remarksRaw.includes('รอ') || remarksRaw.includes('กำลัง')) {
-      remarksHtml = `<div class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-800 px-2.5 py-1.5 rounded text-xs font-bold text-center border border-amber-300 shadow-sm w-full justify-center"><i class="fas fa-clock"></i> ${esc(remarksRaw)}</div>`;
-  } else if (remarksRaw === '-') {
-      remarksHtml = '<span class="text-gray-300">-</span>';
-  } else {
-      remarksHtml = `<span class="text-xs text-c-black">${formatMultiLine(remarksRaw)}</span>`;
-  }
+  let remarksHtml = buildRemarksBadge(remarksRaw);
 
   return { orgName, projectName, displayDate, participantScoreHtml, speakerNameHtml, speakerScoreHtml, remarksHtml };
+}
+
+// สร้าง badge สถานะของคอลัมน์ "หมายเหตุ" ให้หน้าตาสวยงามสม่ำเสมอ ไม่ว่าข้อความจริงในชีตจะเขียนต่างกันแค่ไหน
+// เรียงลำดับการตรวจ: เสร็จสมบูรณ์ (เขียว) > กำลังดำเนินการ/รอ (เหลือง) > ประกาศ/แจ้งเตือนทั่วไป (ฟ้า) > ข้อความอื่นๆ
+function buildRemarksBadge(remarksRaw) {
+  const badge = (icon, colorClasses) =>
+    `<div class="inline-flex items-center gap-1.5 ${colorClasses} px-2.5 py-1.5 rounded text-xs font-bold text-center shadow-sm w-full justify-center"><i class="fas ${icon}"></i> ${esc(remarksRaw)}</div>`;
+
+  if (remarksRaw === '-' || remarksRaw.trim() === '') {
+    return '<span class="text-gray-300">-</span>';
+  }
+  if (remarksRaw.includes('เรียบร้อย') || remarksRaw.includes('นำเข้า')) {
+    return badge('fa-check-circle', 'bg-emerald-100 text-emerald-800 border border-emerald-300');
+  }
+  if (remarksRaw.includes('อยู่ระหว่าง') || remarksRaw.includes('รอ') || remarksRaw.includes('กำลัง')) {
+    return badge('fa-clock', 'bg-amber-100 text-amber-800 border border-amber-300');
+  }
+  if (remarksRaw.includes('ประกาศ')) {
+    return badge('fa-bullhorn', 'bg-sky-100 text-c-sky border border-sky-300');
+  }
+  return `<span class="text-xs text-c-black">${formatMultiLine(remarksRaw)}</span>`;
 }
 
 function renderCreditsTable(data) {
