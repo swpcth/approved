@@ -58,7 +58,10 @@ body { background-color: #f3f4f6; color: #1D1D1B; font-family: 'Sarabun', sans-s
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 .animate-fade-in { animation: fadeIn 0.3s ease-out; }
 
-/* Focus ที่มองเห็นชัดเจนสำหรับผู้ใช้คีย์บอร์ด */
+/* ซ่อนลูกศร default ของ <details>/<summary> เพราะใช้ไอคอน chevron ที่กำหนดเองแทน */
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+
 button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
   outline: 3px solid #d97706; outline-offset: 2px;
 }
