@@ -89,15 +89,23 @@ td.cert-editable { display: table-cell; }
   -webkit-print-color-adjust: exact; print-color-adjust: exact;
 }
 
-/* สั่งพิมพ์: แสดงเฉพาะเนื้อหาเอกสารรับรอง ซ่อนส่วนอื่นของหน้าเว็บทั้งหมด */
+/* สั่งพิมพ์: แสดงเฉพาะเอกสารรับรอง (#certificate-modal) ส่วนอื่นทั้งหมดของหน้าเว็บใช้ display:none
+   เพื่อ "ยุบ" พื้นที่จริงๆ ไม่ใช่แค่ซ่อนการมองเห็น (visibility:hidden ไม่ยุบพื้นที่ ทำให้นับจำนวนหน้าพิมพ์ผิดตามความสูงทั้งเว็บ) */
 @media print {
-  body * { visibility: hidden; }
-  #certificate-print-area, #certificate-print-area * { visibility: visible; }
-  .modal-overlay { position: static !important; background: none !important; padding: 0 !important; }
-  #certificate-print-area { position: absolute; top: 0; left: 0; width: 100%; padding: 20px; }
-  /* ตอนพิมพ์จริง: ให้ลายน้ำอิงตามหน้ากระดาษทั้งใบ (position: fixed) แทนกล่องเนื้อหา จะได้อยู่กึ่งกลางกระดาษเป๊ะไม่ว่าตารางจะสั้นหรือยาว */
-  .cert-watermark { position: fixed !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; width: 45%; max-width: 380px; }
+  body > *:not(#certificate-modal) { display: none !important; }
   .no-print { display: none !important; }
+
+  .modal-overlay { position: static !important; inset: auto !important; background: none !important; padding: 0 !important; display: block !important; }
+  #certificate-print-area { position: relative !important; width: 100%; padding: 20px; }
+
+  /* ให้ลายน้ำอิงตามหน้ากระดาษทั้งใบ (position: fixed) แทนกล่องเนื้อหา จะได้อยู่กึ่งกลางกระดาษเป๊ะไม่ว่าตารางจะสั้นหรือยาว */
+  .cert-watermark { position: fixed !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; width: 45%; max-width: 380px; }
+}
+
+/* ตั้งค่าเริ่มต้นให้กระดาษเป็นแนวนอน (บราวเซอร์ที่รองรับจะเลือก Landscape ให้อัตโนมัติในหน้าต่างสั่งพิมพ์) */
+@page {
+  size: landscape;
+  margin: 12mm;
 }
 
 button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
