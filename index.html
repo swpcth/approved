@@ -39,7 +39,7 @@
     <div class="container mx-auto px-4 py-4">
       <div class="flex items-center gap-5">
         <div class="flex-shrink-0">
-           <img id="council-logo" src="11zon_cropped.png" alt="ตราสัญลักษณ์สภาวิชาชีพสังคมสงเคราะห์" class="h-20 w-auto drop-shadow-sm hover:scale-105 transition-transform duration-300" onerror="handleLogoError(this)">
+           <img id="council-logo" src="assets/logo-swpc.png" alt="ตราสัญลักษณ์สภาวิชาชีพสังคมสงเคราะห์" class="h-20 w-auto drop-shadow-sm hover:scale-105 transition-transform duration-300" onerror="handleLogoError(this)">
         </div>
         <div class="border-l-4 border-c-red pl-5">
           <h1 class="text-xl md:text-2xl font-bold text-c-navy tracking-tight leading-none mb-1">ระบบตรวจสอบหน่วยคะแนนการศึกษาต่อเนื่อง</h1>
@@ -111,7 +111,7 @@
         </span>
         <span>
           <span class="block font-bold text-c-navy text-sm md:text-base leading-snug">ระบบตรวจสอบประวัติการลงทะเบียนเข้าร่วมโครงการ/อบรม สภาวิชาชีพสังคมสงเคราะห์</span>
-          <span class="block text-xs text-gray-500 mt-0.5">ตรวจสอบประวัติรายชื่อผู้เข้าร่วมโครงการ/อบรม ของสภาวิชาชีพฯ และสภาฯ ได้ดำเนินการนำเข้าหน่วยคะแนนให้เรียบร้อยแล้ว</span>
+          <span class="block text-xs text-gray-500 mt-0.5">ตรวจสอบประวัติการลงทะเบียนของท่านเอง (ไปยังอีกระบบหนึ่ง)</span>
         </span>
       </span>
       <i class="fas fa-arrow-up-right-from-square text-c-sky shrink-0 group-hover:translate-x-1 transition-transform"></i>
@@ -166,7 +166,7 @@
               <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded px-2 py-0.5 text-xs font-bold align-middle mr-1">
                 <i class="fas fa-check-circle"></i> ผู้จัดนำเข้าคะแนนให้ผู้เข้าร่วมแล้ว
               </span>
-              : ทางผู้จัดได้นำเข้าหน่วยคะแนนให้สมาชิกผ่านเว็ปไซต์การศึกษาต่อเนื่องเรียบร้อยแล้ว หากไม่พบข้อมูลกิจกรรมนั้น ๆ ในประวัติการศึกษาต่อเนื่อง ให้ติดต่อผู้จัดโครงการโดยตรง
+              : ทางผู้จัดได้นำเข้าหน่วยคะแนนให้สมาชิกผ่านระบบเรียบร้อยแล้ว หากไม่พบชื่อ ให้ติดต่อผู้จัดโครงการโดยตรง
             </p>
             <p class="leading-relaxed">
               <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 border border-amber-300 rounded px-2 py-0.5 text-xs font-bold align-middle mr-1">
@@ -178,11 +178,31 @@
               <span class="inline-flex items-center gap-1 bg-sky-100 text-c-sky border border-sky-300 rounded px-2 py-0.5 text-xs font-bold align-middle mr-1">
                 <i class="fas fa-bullhorn"></i> ประกาศรายชื่อ
               </span>
-              : ทางผู้จัดประกาศรายชื่อผู้เข้าร่วม (ไม่ได้นำเข้าคะแนนให้) ให้สมาชิก <strong>ดาวน์โหลดรายชื่อ</strong> จากช่อง <strong>"ค้นหาประกาศรายชื่อผู้เข้าอบรม"</strong> เพื่อนำไปแนบเพิ่มกิจกรรมและกรอกค่าคะแนนด้วยตนเองในเว็บไซต์การศึกษาต่อเนื่อง
+              : ทางผู้จัดประกาศรายชื่อผู้เข้าร่วม (ไม่ได้นำเข้าคะแนนให้) ให้สมาชิกดาวน์โหลดรายชื่อจากช่อง <strong>"ค้นหาประกาศรายชื่อผู้เข้าอบรม"</strong> (เมนูด้านบน) เพื่อนำไปแนบเพิ่มกิจกรรมและกรอกค่าคะแนนด้วยตนเองในระบบการศึกษาต่อเนื่อง
             </p>
             <p class="leading-relaxed">
               <span class="text-gray-300 font-bold align-middle mr-2">-</span>
-              ไม่ได้ระบุหมายเหตุ : สมาชิกต้องแนบหลักฐาน (เช่น ใบประกาศฯ/Certificate พร้อมกำหนดการ) เพื่อขอรับค่าคะแนนผ่านเว็ปไซต์การศึกษาต่อเนื่องด้วยตนเอง
+              ไม่ได้ระบุหมายเหตุ : สมาชิกต้องแนบหลักฐาน (เช่น ใบประกาศฯ/Certificate พร้อมกำหนดการ) เพื่อขอรับค่าคะแนนผ่านระบบการศึกษาต่อเนื่องด้วยตนเอง
+            </p>
+          </div>
+
+          <p class="text-xs font-bold uppercase tracking-wide text-c-navy/60 mt-5 mb-2">คอลัมน์ "สถานะ / ไฟล์รายชื่อ" (แท็บค้นหาประกาศรายชื่อผู้เข้าอบรม)</p>
+          <div class="space-y-3">
+            <p class="leading-relaxed">
+              <span class="inline-flex items-center gap-1 bg-c-navy text-white rounded px-2 py-0.5 text-xs font-bold align-middle mr-1">
+                <i class="fas fa-cloud-download-alt"></i> ดาวน์โหลด
+              </span>
+              : มีไฟล์/ลิงก์ประกาศรายชื่อผู้เข้าร่วมให้ดาวน์โหลดโดยตรง กดปุ่มเพื่อเปิดไฟล์ได้ทันที
+            </p>
+            <p class="leading-relaxed">
+              <span class="inline-flex items-center gap-1 bg-green-100 text-green-800 border border-green-300 rounded px-2 py-0.5 text-xs font-bold align-middle mr-1">
+                <i class="fas fa-check-circle"></i> นำเข้าค่าคะแนนแล้ว
+              </span>
+              : ทางผู้จัดได้นำเข้าคะแนนให้สมาชิกในระบบเรียบร้อยแล้ว ไม่ต้องดาวน์โหลดไฟล์เพิ่ม หากไม่พบชื่อ ให้ติดต่อผู้จัดโครงการโดยตรง
+            </p>
+            <p class="leading-relaxed">
+              <span class="text-gray-300 font-bold align-middle mr-2">-</span>
+              ยังไม่มีข้อมูลสถานะ : ยังไม่มีไฟล์รายชื่อหรือข้อความสถานะระบุไว้สำหรับกิจกรรมนี้ในขณะนี้
             </p>
           </div>
 
@@ -205,10 +225,13 @@
           <table class="table-fixed-layout text-left">
             <thead>
               <tr>
-                <th onclick="sortTable('credits', 1)" class="table-head table-head-sortable w-[20%]">
+                <th class="table-head text-center w-[5%]">
+                  <input type="checkbox" id="select-all-credits" onchange="toggleSelectAllVisible(this)" class="w-4 h-4 cursor-pointer align-middle" title="เลือกทั้งหมดที่แสดงอยู่">
+                </th>
+                <th onclick="sortTable('credits', 1)" class="table-head table-head-sortable w-[17%]">
                   ชื่อหน่วยงาน <i id="sort-credits-1" class="fas fa-sort ml-1 opacity-50 text-xs"></i>
                 </th>
-                <th onclick="sortTable('credits', 2)" class="table-head table-head-sortable w-[24%]">
+                <th onclick="sortTable('credits', 2)" class="table-head table-head-sortable w-[22%]">
                   ชื่อโครงการ <i id="sort-credits-2" class="fas fa-sort ml-1 opacity-50 text-xs"></i>
                 </th>
                 <th onclick="sortTable('credits', 3)" class="table-head table-head-sortable text-center w-[12%]">
@@ -261,34 +284,6 @@
         </div>
       </div>
 
-      <details class="mb-8 bg-white border border-gray-200 rounded-xl shadow-sm group" open>
-        <summary class="flex items-center justify-between gap-3 cursor-pointer select-none px-5 py-4 list-none">
-          <span class="flex items-center gap-2 text-c-sky font-bold text-sm md:text-base">
-            <i class="fas fa-circle-question"></i> คำอธิบายหมายเหตุและสถานะโครงการในระบบ
-          </span>
-          <i class="fas fa-chevron-up text-gray-400 transition-transform duration-200 group-open:rotate-180"></i>
-        </summary>
-        <div class="px-5 pb-5 pt-1 text-sm text-c-black border-t border-gray-100">
-
-          <p class="text-xs font-bold uppercase tracking-wide text-c-navy/60 mt-5 mb-2">คอลัมน์ "สถานะ / ไฟล์รายชื่อ" (แท็บค้นหาประกาศรายชื่อผู้เข้าอบรม)</p>
-          <div class="space-y-3">
-            <p class="leading-relaxed">
-              <span class="inline-flex items-center gap-1 bg-c-navy text-white rounded px-2 py-0.5 text-xs font-bold align-middle mr-1">
-                <i class="fas fa-cloud-download-alt"></i> ดาวน์โหลด
-              </span>
-              : มีไฟล์/ลิงก์ประกาศรายชื่อผู้เข้าร่วมให้ดาวน์โหลดโดยตรง กดปุ่ม<strong>ดาวน์โหลด</strong> เพื่อเปิดไฟล์และบันทึก แล้วนำไปแนบเพิ่มกิจกรรมและกรอกค่าคะแนนด้วยตนเองในเว็บไซต์การศึกษาต่อเนื่อง
-            </p>
-            <p class="leading-relaxed">
-              <span class="inline-flex items-center gap-1 bg-green-100 text-green-800 border border-green-300 rounded px-2 py-0.5 text-xs font-bold align-middle mr-1">
-                <i class="fas fa-check-circle"></i> นำเข้าค่าคะแนนแล้ว
-              </span>
-              : ผู้จัดได้นำเข้าคะแนนให้สมาชิกในเว็ปไซต์การศึกษาต่อเนื่องเรียบร้อยแล้ว ไม่ต้องดาวน์โหลดไฟล์เพิ่ม หากไม่พบข้อมูลกิจกรรมนั้น ๆ ในประวัติการศึกษาต่อเนื่อง ให้ติดต่อผู้จัดโครงการโดยตรง
-            </p>
-          </div>
-
-        </div>
-      </details>
-
       <div class="table-container shadow-md" id="result-area-namelist">
         <div class="px-4 py-2 bg-c-navy border-b border-c-sky flex flex-wrap gap-2 justify-between items-center">
             <span class="text-sm font-bold text-white uppercase tracking-wide"><i class="fas fa-users mr-2"></i> ผลการค้นหา</span>
@@ -335,6 +330,78 @@
   </button>
 
   <iframe src="https://script.google.com/macros/s/AKfycbwBuYpJZUv2USdBcNYzY0eZ2SQxgu9Kl2SEfWoLrwuZCo5D_UoBtPJvjn5770fo9wld6Q/exec" class="ai-chat-window" id="aiChatFrame" title="ผู้ช่วยสภาฯ AI"></iframe>
+
+  <!-- แถบลอยเมื่อเลือกโครงการไว้พิมพ์เอกสารรับรอง -->
+  <div id="cert-selection-bar" class="hidden no-print fixed bottom-4 left-1/2 -translate-x-1/2 z-40 bg-c-navy text-white pl-5 pr-3 py-2.5 rounded-full shadow-2xl flex items-center gap-3 max-w-[95vw]">
+    <span class="text-xs md:text-sm font-bold whitespace-nowrap"><i class="fas fa-square-check mr-1"></i> เลือกแล้ว <span id="cert-selected-count">0</span> รายการ</span>
+    <button class="text-xs md:text-sm font-bold px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 transition-colors whitespace-nowrap" onclick="clearCertSelection()">
+      <i class="fas fa-xmark"></i> ล้าง
+    </button>
+    <button class="text-xs md:text-sm font-bold px-4 py-1.5 rounded-full bg-c-main hover:bg-amber-600 transition-colors whitespace-nowrap" onclick="openCertificateModal()">
+      <i class="fas fa-print"></i> พิมพ์เอกสารรับรอง
+    </button>
+  </div>
+
+  <!-- Modal: เอกสารรับรองหน่วยคะแนน -->
+  <div id="certificate-modal" class="modal-overlay hidden">
+    <div class="bg-white rounded-xl shadow-2xl max-w-6xl w-full my-6 mx-auto overflow-hidden">
+
+      <div class="no-print flex items-center justify-between px-6 py-4 bg-c-navy text-white">
+        <h3 class="font-bold text-base md:text-lg"><i class="fas fa-file-lines mr-2"></i> เอกสารรับรองหน่วยคะแนนจากสภาวิชาชีพ</h3>
+        <button onclick="closeCertificateModal()" class="text-white/80 hover:text-white text-2xl leading-none" aria-label="ปิด">&times;</button>
+      </div>
+
+      <div class="no-print px-6 py-3 bg-amber-50 border-b border-amber-200 text-xs text-amber-800">
+        <i class="fas fa-circle-info mr-1"></i>
+        ระบบดึงข้อมูลที่มีในระบบมาใส่ให้อัตโนมัติทุกคอลัมน์ ตรวจสอบความถูกต้องอีกครั้งก่อนสั่งพิมพ์
+      </div>
+
+      <div id="certificate-print-area" class="p-6 overflow-x-auto relative">
+        <img src="assets/logo-swpc.png" alt="" aria-hidden="true" class="cert-watermark">
+
+        <div class="text-center mb-4 relative">
+          <p class="font-bold text-base">หนังสือรับรองหน่วยคะแนนการศึกษาต่อเนื่อง</p>
+          <p class="text-sm">สภาวิชาชีพสังคมสงเคราะห์</p>
+        </div>
+
+        <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm mb-4 relative">
+          <span>ชื่อ-สกุลสมาชิก: <span class="cert-editable" contenteditable="true" data-placeholder="พิมพ์ชื่อ-สกุล"></span></span>
+          <span>เลขสมาชิก: <span class="cert-editable" contenteditable="true" data-placeholder="พิมพ์เลขสมาชิก"></span></span>
+        </div>
+
+        <table class="cert-table w-full border-collapse text-xs relative">
+          <thead>
+            <tr>
+              <th rowspan="2">ลำดับ</th>
+              <th rowspan="2">ชื่อหน่วยงาน</th>
+              <th rowspan="2">ชื่อโครงการ</th>
+              <th rowspan="2">วันที่<br>จัดโครงการ</th>
+              <th colspan="2">หน่วยคะแนน</th>
+              <th rowspan="2">วิทยากร/ผู้จัด</th>
+              <th colspan="2">คะแนนวิทยากร/ผู้จัด</th>
+            </tr>
+            <tr>
+              <th>หมวด 1</th>
+              <th>หมวด 2</th>
+              <th>หมวด 1</th>
+              <th>หมวด 2</th>
+            </tr>
+          </thead>
+          <tbody id="cert-table-rows"></tbody>
+        </table>
+
+        <p class="text-xs text-gray-500 mt-4 relative">พิมพ์จากระบบตรวจสอบหน่วยคะแนนการศึกษาต่อเนื่อง สภาวิชาชีพสังคมสงเคราะห์ วันที่ <span id="cert-print-date"></span></p>
+      </div>
+
+      <div class="no-print flex items-center justify-end gap-2 px-6 py-4 border-t bg-gray-50">
+        <button class="text-xs md:text-sm font-bold px-4 py-2 rounded-full bg-gray-200 text-c-navy hover:bg-gray-300 transition-colors" onclick="closeCertificateModal()">ปิด</button>
+        <button class="text-xs md:text-sm font-bold px-5 py-2 rounded-full bg-c-red hover:bg-red-700 text-white transition-colors" onclick="window.print()">
+          <i class="fas fa-print"></i> สั่งพิมพ์ / บันทึกเป็น PDF
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
