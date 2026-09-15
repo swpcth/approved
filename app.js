@@ -116,10 +116,10 @@ function openCertificateModal() {
       <td>${i + 1}</td>
       <td class="text-left">${esc(row[1])}</td>
       <td class="text-left">${esc(row[2])}</td>
-      <td>${esc(firstLine(row[3]))}</td>
+      <td class="text-left">${esc(firstLine(row[3]))}</td>
       <td>${esc(row[4] || '-')}</td>
       <td>${esc(row[5] || '-')}</td>
-      <td class="text-left">${esc(firstLine(row[6]))}</td>
+      <td class="text-left">${esc(row[6] || '-')}</td>
       <td>${esc(row[7] || '-')}</td>
       <td>${esc(row[8] || '-')}</td>
     </tr>`).join('');
