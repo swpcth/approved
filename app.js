@@ -20,6 +20,10 @@ let isNameListLoaded = false;
 let currentCreditsView = [];
 let currentNameListView = [];
 
+// โครงการที่สมาชิกเลือกไว้เพื่อพิมพ์เป็น "เอกสารรับรองหน่วยคะแนน" (key = เนื้อหาแถว, value = แถวข้อมูล)
+// ใช้เนื้อหาแถวเป็น key แทน index เพื่อให้การเลือกไม่หลุดเมื่อมีการค้นหา/จัดเรียงตารางใหม่
+let selectedCreditRows = new Map();
+
 let sortState = {
     credits: { column: null, dir: 'asc' }, // dir: 'asc' (ก-ฮ) หรือ 'desc' (ฮ-ก)
     namelist: { column: null, dir: 'asc' }
@@ -41,6 +45,91 @@ function handleLogoError(imgEl) {
   fallback.innerHTML = '<i class="fas fa-landmark text-3xl"></i>';
   fallback.title = 'ตราสัญลักษณ์สภาวิชาชีพสังคมสงเคราะห์';
   imgEl.replaceWith(fallback);
+}
+
+// ==========================================
+// เอกสารรับรองหน่วยคะแนน (เลือกโครงการ -> พิมพ์)
+// ==========================================
+
+// แปลงแถวข้อมูลเป็น key เดียวที่คงที่ ใช้เช็คว่าแถวนี้ถูกเลือกไว้หรือยัง (ไม่อิงตำแหน่ง index ที่เปลี่ยนได้เวลากรอง/จัดเรียง)
+function rowKey(row) {
+  return row.join('\u241F');
+}
+
+function toggleCreditSelection(checkboxEl, idx) {
+  const row = currentCreditsView[idx];
+  if (!row) return;
+  const key = rowKey(row);
+  if (checkboxEl.checked) {
+    selectedCreditRows.set(key, row);
+  } else {
+    selectedCreditRows.delete(key);
+  }
+  updateSelectionBar();
+}
+
+function toggleSelectAllVisible(checkboxEl) {
+  currentCreditsView.forEach(row => {
+    const key = rowKey(row);
+    if (checkboxEl.checked) {
+      selectedCreditRows.set(key, row);
+    } else {
+      selectedCreditRows.delete(key);
+    }
+  });
+  renderCreditsTable(currentCreditsView);
+  updateSelectionBar();
+}
+
+function clearCertSelection() {
+  selectedCreditRows.clear();
+  renderCreditsTable(currentCreditsView);
+  updateSelectionBar();
+}
+
+function updateSelectionBar() {
+  const bar = document.getElementById('cert-selection-bar');
+  const countEl = document.getElementById('cert-selected-count');
+  const selectAllBox = document.getElementById('select-all-credits');
+  countEl.textContent = selectedCreditRows.size;
+  bar.classList.toggle('hidden', selectedCreditRows.size === 0);
+
+  if (selectAllBox) {
+    const visibleSelectedCount = currentCreditsView.filter(row => selectedCreditRows.has(rowKey(row))).length;
+    selectAllBox.checked = currentCreditsView.length > 0 && visibleSelectedCount === currentCreditsView.length;
+  }
+}
+
+// เอาบรรทัดแรกของข้อความหลายบรรทัดมาแสดงในตารางเอกสารรับรอง (กันตารางสูงเกินไปเวลาพิมพ์)
+function firstLine(text) {
+  return (text || '-').toString().split('\n')[0].trim() || '-';
+}
+
+function openCertificateModal() {
+  if (selectedCreditRows.size === 0) return;
+
+  const tbody = document.getElementById('cert-table-rows');
+  const rows = Array.from(selectedCreditRows.values());
+
+  tbody.innerHTML = rows.map((row, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td class="text-left">${esc(row[1])}</td>
+      <td class="text-left">${esc(row[2])}</td>
+      <td>${esc(firstLine(row[3]))}</td>
+      <td>${esc(row[4] || '-')}</td>
+      <td>${esc(row[5] || '-')}</td>
+      <td class="text-left">${esc(firstLine(row[6]))}</td>
+      <td>${esc(row[7] || '-')}</td>
+      <td>${esc(row[8] || '-')}</td>
+    </tr>`).join('');
+
+  document.getElementById('cert-print-date').textContent = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('certificate-modal').classList.remove('hidden');
+}
+
+function closeCertificateModal() {
+  document.getElementById('certificate-modal').classList.add('hidden');
 }
 
 // --- เรียก API กลาง: คืนค่าเป็น Promise<{status, data|message}> เสมอ ---
@@ -305,7 +394,9 @@ function csvCell(value) {
 // ==========================================
 async function fetchCreditsData(year) {
   allCreditsData = [];
-  showSkeleton('credits', 7);
+  selectedCreditRows.clear();
+  updateSelectionBar();
+  showSkeleton('credits', 8);
 
   const response = await callApi('credits', { year: year || '', keyword: '' });
 
@@ -414,19 +505,24 @@ function renderCreditsTable(data) {
   countLabel.textContent = `${data.length} รายการ`;
 
   if (data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" class="text-center py-12 text-gray-400 bg-gray-50 border-b border-gray-300">ไม่พบข้อมูลที่ค้นหา ลองเปลี่ยนคำค้นหาหรือปีที่จัดดูครับ</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" class="text-center py-12 text-gray-400 bg-gray-50 border-b border-gray-300">ไม่พบข้อมูลที่ค้นหา ลองเปลี่ยนคำค้นหาหรือปีที่จัดดูครับ</td></tr>`;
     cards.innerHTML = `<div class="text-center py-12 text-gray-400">ไม่พบข้อมูลที่ค้นหา ลองเปลี่ยนคำค้นหาหรือปีที่จัดดูครับ</div>`;
+    updateSelectionBar();
     return;
   }
 
   const rowsHtml = [];
   const cardsHtml = [];
 
-  data.forEach((row) => {
+  data.forEach((row, i) => {
     const d = buildCreditsRowData(row);
+    const isChecked = selectedCreditRows.has(rowKey(row));
 
     rowsHtml.push(`
       <tr class="table-row">
+        <td class="table-cell text-center align-middle">
+          <input type="checkbox" class="w-4 h-4 cursor-pointer align-middle" onchange="toggleCreditSelection(this, ${i})" ${isChecked ? 'checked' : ''} title="เลือกไว้พิมพ์เอกสารรับรอง">
+        </td>
         <td class="table-cell font-semibold text-c-black">${d.orgName}</td>
         <td class="table-cell font-medium text-c-navy">${d.projectName}</td>
         <td class="table-cell text-center text-xs text-gray-600 font-medium">${d.displayDate}</td>
@@ -438,7 +534,10 @@ function renderCreditsTable(data) {
 
     cardsHtml.push(`
       <div class="card-item">
-        <div class="text-xs font-bold text-c-navy/60 uppercase mb-1">${d.orgName}</div>
+        <div class="flex items-start justify-between gap-2 mb-1">
+          <div class="text-xs font-bold text-c-navy/60 uppercase">${d.orgName}</div>
+          <input type="checkbox" class="w-4 h-4 cursor-pointer shrink-0 mt-0.5" onchange="toggleCreditSelection(this, ${i})" ${isChecked ? 'checked' : ''} title="เลือกไว้พิมพ์เอกสารรับรอง">
+        </div>
         <div class="font-bold text-c-navy mb-2">${d.projectName}</div>
         <div class="grid grid-cols-2 gap-2 mb-2">
           <div>
@@ -466,6 +565,7 @@ function renderCreditsTable(data) {
 
   tbody.innerHTML = rowsHtml.join('');
   cards.innerHTML = cardsHtml.join('');
+  updateSelectionBar();
 }
 
 // ==========================================
