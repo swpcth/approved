@@ -73,6 +73,7 @@ details > summary::-webkit-details-marker { display: none; }
 .cert-table th, .cert-table td { border: 1px solid #000; padding: 6px 8px; vertical-align: middle; }
 .cert-table th { background: #fde68a; font-weight: 700; text-align: center; }
 .cert-table td { text-align: center; }
+.cert-table td.text-left { text-align: left; }
 
 /* ช่องที่ให้พิมพ์เพิ่มเติมเองก่อนสั่งพิมพ์ (รุ่นที่/ครั้งที่, ชั่วโมง, เลขที่รับรองฯ ฯลฯ) */
 .cert-editable { outline: none; border-bottom: 1px dashed #999; min-width: 60px; min-height: 1.2em; display: inline-block; }
