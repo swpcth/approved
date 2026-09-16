@@ -111,18 +111,22 @@ function openCertificateModal() {
   const tbody = document.getElementById('cert-table-rows');
   const rows = Array.from(selectedCreditRows.values());
 
-  tbody.innerHTML = rows.map((row, i) => `
+  tbody.innerHTML = rows.map((row, i) => {
+    const activityType = (row[10] || '').toString().trim();
+    const activityTypeLine = (activityType && activityType !== '-') ? `<br><span class="text-[10px] text-c-sky font-semibold">(${esc(activityType)})</span>` : '';
+    return `
     <tr>
       <td>${i + 1}</td>
       <td class="text-left">${esc(row[1])}</td>
-      <td class="text-left">${esc(row[2])}</td>
+      <td class="text-left">${esc(row[2])}${activityTypeLine}</td>
       <td class="text-left">${esc(firstLine(row[3]))}</td>
       <td>${esc(row[4] || '-')}</td>
       <td>${esc(row[5] || '-')}</td>
       <td class="text-left">${esc(row[6] || '-')}</td>
       <td>${esc(row[7] || '-')}</td>
       <td>${esc(row[8] || '-')}</td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
 
   document.getElementById('cert-print-date').textContent = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
   document.getElementById('certificate-modal').classList.remove('hidden');
@@ -461,6 +465,10 @@ function buildCreditsRowData(row) {
 
   const orgName = esc(row[1]);
   const projectName = esc(row[2]);
+  const activityType = (row[10] || '').toString().trim();
+  const activityTypeHtml = (activityType && activityType !== '-')
+    ? `<span class="inline-block mt-1 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-c-sky/10 text-c-sky border border-c-sky/30 align-middle">${esc(activityType)}</span>`
+    : '';
   const displayDate = formatMultiLine(row[3]);
   const participantScoreHtml = (!row[4] && !row[5]) ? '<div class="text-center text-gray-300">-</div>' : createScoreBadge(row[4], 1) + createScoreBadge(row[5], 2);
 
@@ -472,7 +480,7 @@ function buildCreditsRowData(row) {
   let remarksRaw = row[9] || '-';
   let remarksHtml = buildRemarksBadge(remarksRaw);
 
-  return { orgName, projectName, displayDate, participantScoreHtml, speakerNameHtml, speakerScoreHtml, remarksHtml };
+  return { orgName, projectName, activityType, activityTypeHtml, displayDate, participantScoreHtml, speakerNameHtml, speakerScoreHtml, remarksHtml };
 }
 
 // สร้าง badge สถานะของคอลัมน์ "หมายเหตุ" ให้หน้าตาสวยงามสม่ำเสมอ ไม่ว่าข้อความจริงในชีตจะเขียนต่างกันแค่ไหน
@@ -524,7 +532,7 @@ function renderCreditsTable(data) {
           <input type="checkbox" class="w-4 h-4 cursor-pointer align-middle" onchange="toggleCreditSelection(this, ${i})" ${isChecked ? 'checked' : ''} title="เลือกไว้พิมพ์เอกสารรับรอง">
         </td>
         <td class="table-cell font-semibold text-c-black">${d.orgName}</td>
-        <td class="table-cell font-medium text-c-navy">${d.projectName}</td>
+        <td class="table-cell font-medium text-c-navy">${d.projectName}${d.activityTypeHtml ? '<br>' + d.activityTypeHtml : ''}</td>
         <td class="table-cell text-center text-xs text-gray-600 font-medium">${d.displayDate}</td>
         <td class="table-cell">${d.participantScoreHtml}</td>
         <td class="table-cell">${d.speakerNameHtml}</td>
@@ -538,7 +546,7 @@ function renderCreditsTable(data) {
           <div class="text-xs font-bold text-c-navy/60 uppercase">${d.orgName}</div>
           <input type="checkbox" class="w-4 h-4 cursor-pointer shrink-0 mt-0.5" onchange="toggleCreditSelection(this, ${i})" ${isChecked ? 'checked' : ''} title="เลือกไว้พิมพ์เอกสารรับรอง">
         </div>
-        <div class="font-bold text-c-navy mb-2">${d.projectName}</div>
+        <div class="font-bold text-c-navy mb-2">${d.projectName}${d.activityTypeHtml ? '<br>' + d.activityTypeHtml : ''}</div>
         <div class="grid grid-cols-2 gap-2 mb-2">
           <div>
             <div class="card-label">วันที่จัด</div>
