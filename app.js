@@ -113,7 +113,7 @@ function openCertificateModal() {
 
   tbody.innerHTML = rows.map((row, i) => {
     const activityType = (row[10] || '').toString().trim();
-    const activityTypeLine = (activityType && activityType !== '-') ? `<br><span class="text-[10px] text-c-sky font-semibold">(${esc(activityType)})</span>` : '';
+    const activityTypeLine = (activityType && activityType !== '-') ? `<br><span class="text-[10px] text-c-sky font-semibold">ประเภทกิจกรรม: ${esc(activityType)}</span>` : '';
     return `
     <tr>
       <td>${i + 1}</td>
@@ -467,7 +467,7 @@ function buildCreditsRowData(row) {
   const projectName = esc(row[2]);
   const activityType = (row[10] || '').toString().trim();
   const activityTypeHtml = (activityType && activityType !== '-')
-    ? `<span class="inline-block mt-1 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-c-sky/10 text-c-sky border border-c-sky/30 align-middle">${esc(activityType)}</span>`
+    ? `<span class="inline-block mt-1 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-c-sky/10 text-c-sky border border-c-sky/30 align-middle">ประเภทกิจกรรม: ${esc(activityType)}</span>`
     : '';
   const displayDate = formatMultiLine(row[3]);
   const participantScoreHtml = (!row[4] && !row[5]) ? '<div class="text-center text-gray-300">-</div>' : createScoreBadge(row[4], 1) + createScoreBadge(row[5], 2);
