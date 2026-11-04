@@ -3,34 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบตรวจสอบหน่วยคะแนนโครงการที่สภาวิชาชีพสังคมสงเคราะห์รับรอง</title><link rel="icon" type="image/png" href="11zon_cropped.png">
+  <meta name="theme-color" content="#1C3868">
+  <title>ระบบตรวจสอบหน่วยคะแนนโครงการที่สภาวิชาชีพสังคมสงเคราะห์รับรอง</title>
   <meta name="description" content="ค้นหาโครงการและหน่วยคะแนนการศึกษาต่อเนื่อง (CE) ที่สภาวิชาชีพสังคมสงเคราะห์รับรอง พร้อมประกาศรายชื่อผู้เข้าอบรม">
+  <link rel="icon" type="image/png" href="11zon_cropped.png">
 
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- เริ่มต่อเครือข่ายล่วงหน้า ลดเวลารอข้อมูลครั้งแรก -->
+  <link rel="preconnect" href="https://script.google.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'c-red': '#E61C2A',    /* สีแดง */
-            'c-sky': '#1178A3',    /* สีฟ้า */
-            'c-navy': '#1C3868',   /* สีน้ำเงิน */
-            'c-main': '#d97706',   /* สีส้มทอง */
-            'c-black': '#1D1D1B',  /* สีดำ */
-          },
-          fontFamily: {
-            'sans': ['Sarabun', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
-
+  <!-- Tailwind ที่ build แล้ว (แทน cdn.tailwindcss.com) — แก้คลาสใหม่ใน HTML/JS แล้วรัน: npm run build:css -->
+  <link rel="stylesheet" href="tailwind.css">
+  <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css">
   <link rel="stylesheet" href="style.css">
+  <script src="vendor/sweetalert2.all.min.js" defer></script>
+  <script src="app.js" defer></script>
 </head>
 <body>
 
@@ -39,7 +28,7 @@
     <div class="container mx-auto px-4 py-4">
       <div class="flex items-center gap-5">
         <div class="flex-shrink-0">
-           <img id="council-logo" src="logo-swpc.png" alt="ตราสัญลักษณ์สภาวิชาชีพสังคมสงเคราะห์" class="h-20 w-auto drop-shadow-sm hover:scale-105 transition-transform duration-300" onerror="handleLogoError(this)">
+          <img id="council-logo" src="logo-swpc.png" width="80" height="80" alt="ตราสัญลักษณ์สภาวิชาชีพสังคมสงเคราะห์" class="h-20 w-auto drop-shadow-sm hover:scale-105 transition-transform duration-300">
         </div>
         <div class="border-l-4 border-c-red pl-5">
           <h1 class="text-xl md:text-2xl font-bold text-c-navy tracking-tight leading-none mb-1">ระบบตรวจสอบหน่วยคะแนนการศึกษาต่อเนื่อง</h1>
@@ -49,58 +38,30 @@
     </div>
   </header>
 
-  <div class="container mx-auto px-4 py-8 max-w-7xl">
+  <main class="container mx-auto px-4 py-8 max-w-7xl">
 
     <!-- แจ้งเตือนถ้ายังไม่ได้ตั้งค่า API URL -->
-    <div id="api-config-warning" class="hidden mb-6 p-4 rounded-xl border-2 border-c-red bg-red-50 text-c-red text-sm font-semibold">
-      <i class="fas fa-triangle-exclamation mr-1"></i>
+    <div id="api-config-warning" class="hidden mb-6 p-4 rounded-xl border-2 border-c-red bg-red-50 text-c-red text-sm font-semibold" role="alert">
+      <i class="fas fa-triangle-exclamation mr-1" aria-hidden="true"></i>
       ยังไม่ได้ตั้งค่า API_BASE_URL ในไฟล์ <code>app.js</code> — โปรดใส่ URL ของ Google Apps Script Web App ที่ deploy แล้ว (ลงท้ายด้วย /exec)
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 px-1">
-
-      <button onclick="switchTab('searchCredits')" id="tab-credits"
-              class="relative w-full p-6 rounded-2xl border-2 transition-all duration-300 ease-out
-                     flex flex-col items-center justify-center gap-4 cursor-pointer select-none text-center
-                     bg-c-navy border-c-main text-white shadow-xl scale-[1.02] ring-2 ring-offset-2 ring-c-navy z-10 group"
-              role="tab" aria-selected="true" aria-controls="section-credits">
-
-        <div class="w-16 h-16 rounded-full flex items-center justify-center text-3xl transition-colors shadow-inner mb-1
-                    bg-white/20 text-white">
-           <i class="fas fa-search"></i>
-        </div>
-
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 px-1" role="tablist" aria-label="เลือกประเภทการค้นหา">
+      <button type="button" id="tab-credits" class="tab-btn" role="tab" aria-selected="true" aria-controls="section-credits" tabindex="0">
+        <div class="tab-icon"><i class="fas fa-search" aria-hidden="true"></i></div>
         <div class="flex flex-col items-center justify-center w-full">
-           <h3 class="text-lg md:text-xl font-bold leading-tight mb-2 text-white">
-             ค้นหาโครงการ/หน่วยคะแนน
-           </h3>
-           <p class="text-sm font-light opacity-90 text-gray-200">
-             ที่สภาวิชาชีพสังคมสงเคราะห์รับรอง
-           </p>
+          <h3 class="tab-title">ค้นหาโครงการ/หน่วยคะแนน</h3>
+          <p class="tab-sub">ที่สภาวิชาชีพสังคมสงเคราะห์รับรอง</p>
         </div>
       </button>
 
-      <button onclick="switchTab('searchNameList')" id="tab-namelist"
-              class="relative w-full p-6 rounded-2xl border-2 transition-all duration-300 ease-out
-                     flex flex-col items-center justify-center gap-4 cursor-pointer select-none text-center
-                     bg-white border-gray-200 text-gray-400 hover:bg-white hover:border-c-sky/50 hover:text-c-navy hover:shadow-md group"
-              role="tab" aria-selected="false" aria-controls="section-namelist">
-
-        <div class="w-16 h-16 rounded-full flex items-center justify-center text-3xl transition-colors shadow-inner mb-1
-                    bg-gray-100 text-gray-400 group-hover:text-c-navy group-hover:bg-c-navy/10">
-           <i class="fas fa-list-alt"></i>
-        </div>
-
+      <button type="button" id="tab-namelist" class="tab-btn" role="tab" aria-selected="false" aria-controls="section-namelist" tabindex="-1">
+        <div class="tab-icon"><i class="fas fa-list-alt" aria-hidden="true"></i></div>
         <div class="flex flex-col items-center justify-center w-full">
-           <h3 class="text-lg md:text-xl font-bold leading-tight mb-2 text-c-black group-hover:text-c-navy">
-             ค้นหาประกาศรายชื่อผู้เข้าอบรม
-           </h3>
-           <p class="text-sm font-light opacity-90 text-gray-500 group-hover:text-c-navy/70">
-             กิจกรรมที่สภาวิชาชีพฯ จัด
-           </p>
+          <h3 class="tab-title">ค้นหาประกาศรายชื่อผู้เข้าอบรม</h3>
+          <p class="tab-sub">กิจกรรมที่สภาวิชาชีพฯ จัด</p>
         </div>
       </button>
-
     </div>
 
     <a href="https://swpcth.github.io/history-registration-/" target="_blank" rel="noopener"
@@ -117,35 +78,24 @@
       <i class="fas fa-arrow-up-right-from-square text-c-sky shrink-0 group-hover:translate-x-1 transition-transform"></i>
     </a>
 
-    <div id="section-credits" class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 animate-fade-in min-h-[500px]" role="tabpanel">
+    <section id="section-credits" class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 animate-fade-in min-h-[500px]" role="tabpanel" aria-labelledby="tab-credits">
 
       <div class="bg-gray-100 p-6 rounded-xl border border-gray-300 mb-8 shadow-inner">
         <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-end">
           <div class="md:col-span-1">
             <label class="block text-c-navy text-base font-bold mb-2 ml-1" for="year-select">
-              <i class="fas fa-calendar-alt mr-1"></i> ปีที่จัด (พ.ศ.)
+              <i class="fas fa-calendar-alt mr-1" aria-hidden="true"></i> ปีที่จัด (พ.ศ.)
             </label>
-            <select id="year-select" class="input-field cursor-pointer font-semibold" onchange="fetchCreditsData(this.value)">
-              <option value="">ทั้งหมด</option>
-              <option value="2569" selected>2569</option>
-              <option value="2568">2568</option>
-              <option value="2567">2567</option>
-              <option value="2566">2566</option>
-              <option value="2565">2565</option>
-              <option value="2564">2564</option>
-              <option value="2559-2563">2559-2563</option>
-              <option value="SWPC before 65">จัดโดยสภาฯ ก่อน 65</option>
-            </select>
+            <!-- ตัวเลือกปีสร้างอัตโนมัติจากชีตจริงโดย app.js (ไม่ต้องเพิ่มปีในไฟล์นี้) -->
+            <select id="year-select" class="input-field cursor-pointer font-semibold"><option value="">ทั้งหมด</option></select>
           </div>
           <div class="md:col-span-4">
             <label class="block text-c-navy text-base font-bold mb-2 ml-1" for="keyword-credits">
-              <i class="fas fa-search mr-1"></i> ค้นหา (ชื่อหน่วยงาน / ชื่อโครงการ)
+              <i class="fas fa-search mr-1" aria-hidden="true"></i> ค้นหา (ชื่อหน่วยงาน / ชื่อโครงการ)
             </label>
             <div class="relative w-full">
-               <input type="text" id="keyword-credits" class="input-field input-field-clearable" placeholder="พิมพ์ชื่อหน่วยงาน หรือ ชื่อโครงการ..." oninput="filterCreditsLocal()" autocomplete="off">
-               <span class="clear-btn hidden" id="clear-credits-keyword" onclick="clearKeyword('credits')" title="ล้างคำค้นหา" role="button" aria-label="ล้างคำค้นหา">
-                 <i class="fas fa-times"></i>
-               </span>
+              <input type="text" id="keyword-credits" class="input-field input-field-clearable" placeholder="พิมพ์ชื่อหน่วยงาน หรือ ชื่อโครงการ..." autocomplete="off">
+              <button type="button" class="clear-btn hidden" id="clear-credits-keyword" title="ล้างคำค้นหา" aria-label="ล้างคำค้นหา"><i class="fas fa-times" aria-hidden="true"></i></button>
             </div>
           </div>
         </div>
@@ -209,16 +159,16 @@
         </div>
       </details>
 
-      <div class="table-container shadow-md" id="result-area-credits">
-         <div class="px-4 py-2 bg-c-navy border-b border-c-sky flex flex-wrap gap-2 justify-between items-center">
-            <span class="text-sm font-bold text-white uppercase tracking-wide"><i class="fas fa-database mr-2"></i> ผลการค้นหา</span>
-            <div class="flex items-center gap-2">
-              <button class="toolbar-btn" onclick="exportToCSV('credits')" title="ดาวน์โหลดผลการค้นหาเป็นไฟล์ CSV (เปิดด้วย Excel ได้)">
-                <i class="fas fa-file-csv"></i> ดาวน์โหลด CSV
-              </button>
-              <span class="text-xs font-bold text-c-navy bg-white px-3 py-1 rounded-full shadow-sm" id="credits-count">รอโหลดข้อมูล...</span>
-            </div>
-         </div>
+      <div class="table-container shadow-md" id="result-area-credits" aria-busy="true">
+        <div class="px-4 py-2 bg-c-navy border-b border-c-sky flex flex-wrap gap-2 justify-between items-center">
+          <span class="text-sm font-bold text-white uppercase tracking-wide"><i class="fas fa-database mr-2" aria-hidden="true"></i> ผลการค้นหา</span>
+          <div class="flex items-center gap-2">
+            <button type="button" class="toolbar-btn" data-export="credits" title="ดาวน์โหลดผลการค้นหาเป็นไฟล์ CSV (เปิดด้วย Excel ได้)">
+              <i class="fas fa-file-csv" aria-hidden="true"></i> ดาวน์โหลด CSV
+            </button>
+            <span class="text-xs font-bold text-c-navy bg-white px-3 py-1 rounded-full shadow-sm" id="credits-count" role="status" aria-live="polite">รอโหลดข้อมูล...</span>
+          </div>
+        </div>
 
         <!-- มุมมองตาราง: จอ md ขึ้นไป -->
         <div class="overflow-x-auto hidden md:block">
@@ -226,16 +176,16 @@
             <thead>
               <tr>
                 <th class="table-head text-center w-[5%]">
-                  <input type="checkbox" id="select-all-credits" onchange="toggleSelectAllVisible(this)" class="w-4 h-4 cursor-pointer align-middle" title="เลือกทั้งหมดที่แสดงอยู่">
+                  <input type="checkbox" id="select-all-credits" class="w-4 h-4 cursor-pointer align-middle" title="เลือกทั้งหมดที่แสดงอยู่" aria-label="เลือกทั้งหมดที่แสดงอยู่">
                 </th>
-                <th onclick="sortTable('credits', 1)" class="table-head table-head-sortable w-[17%]">
-                  ชื่อหน่วยงาน <i id="sort-credits-1" class="fas fa-sort ml-1 opacity-50 text-xs"></i>
+                <th class="table-head table-head-sortable  w-[17%]" aria-sort="none">
+                  <button type="button" class="sort-btn" data-sort-table="credits" data-sort-col="1">ชื่อหน่วยงาน <i id="sort-credits-1" class="fas fa-sort ml-1 opacity-50 text-xs" aria-hidden="true"></i></button>
                 </th>
-                <th onclick="sortTable('credits', 2)" class="table-head table-head-sortable w-[22%]">
-                  ชื่อโครงการ <i id="sort-credits-2" class="fas fa-sort ml-1 opacity-50 text-xs"></i>
+                <th class="table-head table-head-sortable  w-[22%]" aria-sort="none">
+                  <button type="button" class="sort-btn" data-sort-table="credits" data-sort-col="2">ชื่อโครงการ <i id="sort-credits-2" class="fas fa-sort ml-1 opacity-50 text-xs" aria-hidden="true"></i></button>
                 </th>
-                <th onclick="sortTable('credits', 3)" class="table-head table-head-sortable text-center w-[12%]">
-                  วันที่จัด <i id="sort-credits-3" class="fas fa-sort ml-1 opacity-50 text-xs"></i>
+                <th class="table-head table-head-sortable text-center w-[12%]" aria-sort="none">
+                  <button type="button" class="sort-btn" data-sort-table="credits" data-sort-col="3">วันที่จัด <i id="sort-credits-3" class="fas fa-sort ml-1 opacity-50 text-xs" aria-hidden="true"></i></button>
                 </th>
                 <th class="table-head text-center w-[10%]">คะแนน<br><span class="opacity-80 font-normal text-xs">(ผู้เข้าอบรม)</span></th>
                 <th class="table-head w-[14%]">วิทยากร/ผู้จัด</th>
@@ -249,51 +199,45 @@
 
         <!-- มุมมองการ์ด: จอมือถือ -->
         <div class="block md:hidden p-3 bg-gray-50" id="cards-credits"></div>
+        <div id="more-credits" class="hidden text-center p-4 bg-gray-50 border-t border-gray-200">
+          <button type="button" id="more-credits-btn" class="more-btn"></button>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div id="section-namelist" class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hidden animate-fade-in min-h-[500px]" role="tabpanel">
+    <section id="section-namelist" class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hidden animate-fade-in min-h-[500px]" role="tabpanel" aria-labelledby="tab-namelist">
 
       <div class="bg-gray-100 p-6 rounded-xl border border-gray-300 mb-8 shadow-inner">
         <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-end">
           <div class="md:col-span-1">
             <label class="block text-c-navy text-base font-bold mb-2 ml-1" for="year-filter-namelist">
-              <i class="fas fa-calendar-alt mr-1"></i> ปีที่จัด
+              <i class="fas fa-calendar-alt mr-1" aria-hidden="true"></i> ปีที่จัด
             </label>
-            <select id="year-filter-namelist" class="input-field cursor-pointer font-semibold" onchange="filterNameListLocal()">
-              <option value="" selected>ทั้งหมด</option>
-              <option value="2569">2569</option>
-              <option value="2568">2568</option>
-              <option value="2567">2567</option>
-              <option value="2566">2566</option>
-              <option value="2565">2565</option>
-              <option value="2564">2564</option>
-            </select>
+            <!-- ตัวเลือกปีสร้างอัตโนมัติจากชีตจริงโดย app.js (ไม่ต้องเพิ่มปีในไฟล์นี้) -->
+            <select id="year-filter-namelist" class="input-field cursor-pointer font-semibold"><option value="">ทั้งหมด</option></select>
           </div>
           <div class="md:col-span-4">
             <label class="block text-c-navy text-base font-bold mb-2 ml-1" for="keyword-namelist">
-              <i class="fas fa-search mr-1"></i> ค้นหา (ชื่อโครงการ)
+              <i class="fas fa-search mr-1" aria-hidden="true"></i> ค้นหา (ชื่อโครงการ)
             </label>
             <div class="relative w-full">
-               <input type="text" id="keyword-namelist" class="input-field input-field-clearable" placeholder="พิมพ์ชื่อโครงการ..." oninput="filterNameListLocal()" autocomplete="off">
-               <span class="clear-btn hidden" id="clear-namelist-keyword" onclick="clearKeyword('namelist')" title="ล้างคำค้นหา" role="button" aria-label="ล้างคำค้นหา">
-                 <i class="fas fa-times"></i>
-               </span>
+              <input type="text" id="keyword-namelist" class="input-field input-field-clearable" placeholder="พิมพ์ชื่อโครงการ..." autocomplete="off">
+              <button type="button" class="clear-btn hidden" id="clear-namelist-keyword" title="ล้างคำค้นหา" aria-label="ล้างคำค้นหา"><i class="fas fa-times" aria-hidden="true"></i></button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="table-container shadow-md" id="result-area-namelist">
+      <div class="table-container shadow-md" id="result-area-namelist" aria-busy="true">
         <div class="px-4 py-2 bg-c-navy border-b border-c-sky flex flex-wrap gap-2 justify-between items-center">
-            <span class="text-sm font-bold text-white uppercase tracking-wide"><i class="fas fa-users mr-2"></i> ผลการค้นหา</span>
-            <div class="flex items-center gap-2">
-              <button class="toolbar-btn" onclick="exportToCSV('namelist')" title="ดาวน์โหลดผลการค้นหาเป็นไฟล์ CSV (เปิดด้วย Excel ได้)">
-                <i class="fas fa-file-csv"></i> ดาวน์โหลด CSV
-              </button>
-              <span class="text-xs font-bold text-c-navy bg-white px-3 py-1 rounded-full shadow-sm" id="namelist-count">รอโหลดข้อมูล...</span>
-            </div>
-         </div>
+          <span class="text-sm font-bold text-white uppercase tracking-wide"><i class="fas fa-users mr-2" aria-hidden="true"></i> ผลการค้นหา</span>
+          <div class="flex items-center gap-2">
+            <button type="button" class="toolbar-btn" data-export="namelist" title="ดาวน์โหลดผลการค้นหาเป็นไฟล์ CSV (เปิดด้วย Excel ได้)">
+              <i class="fas fa-file-csv" aria-hidden="true"></i> ดาวน์โหลด CSV
+            </button>
+            <span class="text-xs font-bold text-c-navy bg-white px-3 py-1 rounded-full shadow-sm" id="namelist-count" role="status" aria-live="polite">รอโหลดข้อมูล...</span>
+          </div>
+        </div>
 
         <!-- มุมมองตาราง: จอ md ขึ้นไป -->
         <div class="overflow-x-auto hidden md:block">
@@ -301,8 +245,8 @@
             <thead>
               <tr>
                 <th class="table-head text-center w-[12%]">ปีที่จัด</th>
-                <th onclick="sortTable('namelist', 2)" class="table-head table-head-sortable w-[63%]">
-                  ชื่อกิจกรรม/โครงการ <i id="sort-namelist-2" class="fas fa-sort ml-1 opacity-50 text-xs"></i>
+                <th class="table-head table-head-sortable  w-[63%]" aria-sort="none">
+                  <button type="button" class="sort-btn" data-sort-table="namelist" data-sort-col="2">ชื่อกิจกรรม/โครงการ <i id="sort-namelist-2" class="fas fa-sort ml-1 opacity-50 text-xs" aria-hidden="true"></i></button>
                 </th>
                 <th class="table-head text-center w-[25%]">สถานะ / ไฟล์รายชื่อ</th>
               </tr>
@@ -313,46 +257,47 @@
 
         <!-- มุมมองการ์ด: จอมือถือ -->
         <div class="block md:hidden p-3 bg-gray-50" id="cards-namelist"></div>
+        <div id="more-namelist" class="hidden text-center p-4 bg-gray-50 border-t border-gray-200">
+          <button type="button" id="more-namelist-btn" class="more-btn"></button>
+        </div>
       </div>
-    </div>
+    </section>
 
-  </div>
+  </main>
 
   <footer class="text-center text-gray-500 text-sm py-8 mt-6">
     <div class="mb-3">
-      <i class="fas fa-landmark text-c-navy/30 text-3xl"></i>
+      <i class="fas fa-landmark text-c-navy/30 text-3xl" aria-hidden="true"></i>
     </div>
     <p class="font-bold text-c-navy">&copy; สภาวิชาชีพสังคมสงเคราะห์ | Social Work Professional Council</p>
   </footer>
 
-  <button class="ai-chat-btn" id="aiChatBtn" onclick="toggleChat()">
-    💬 คุยกับผู้ช่วยสภาฯ AI
-  </button>
-
-  <iframe src="https://script.google.com/macros/s/AKfycbwBuYpJZUv2USdBcNYzY0eZ2SQxgu9Kl2SEfWoLrwuZCo5D_UoBtPJvjn5770fo9wld6Q/exec" class="ai-chat-window" id="aiChatFrame" title="ผู้ช่วยสภาฯ AI"></iframe>
+  <button type="button" class="ai-chat-btn" id="aiChatBtn" aria-expanded="false" aria-controls="aiChatFrame">💬 คุยกับผู้ช่วยสภาฯ AI</button>
+  <!-- src ถูกใส่ตอนกดเปิดแชทครั้งแรก (ดู CONFIG.CHAT_URL ใน app.js) เพื่อไม่ให้หน่วงการโหลดหน้า -->
+  <iframe class="ai-chat-window" id="aiChatFrame" title="ผู้ช่วยสภาฯ AI"></iframe>
 
   <!-- แถบลอยเมื่อเลือกโครงการไว้พิมพ์เอกสารรับรอง -->
-  <div id="cert-selection-bar" class="hidden no-print fixed bottom-4 left-1/2 -translate-x-1/2 z-40 bg-c-navy text-white pl-5 pr-3 py-2.5 rounded-full shadow-2xl flex items-center gap-3 max-w-[95vw]">
-    <span class="text-xs md:text-sm font-bold whitespace-nowrap"><i class="fas fa-square-check mr-1"></i> เลือกแล้ว <span id="cert-selected-count">0</span> รายการ</span>
-    <button class="text-xs md:text-sm font-bold px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 transition-colors whitespace-nowrap" onclick="clearCertSelection()">
-      <i class="fas fa-xmark"></i> ล้าง
+  <div id="cert-selection-bar" class="hidden no-print fixed left-1/2 -translate-x-1/2 z-40 bg-c-navy text-white pl-5 pr-3 py-2.5 rounded-full shadow-2xl flex items-center gap-3 max-w-[95vw]">
+    <span class="text-xs md:text-sm font-bold whitespace-nowrap" role="status" aria-live="polite"><i class="fas fa-square-check mr-1" aria-hidden="true"></i> เลือกแล้ว <span id="cert-selected-count">0</span> รายการ</span>
+    <button type="button" id="cert-clear-btn" class="text-xs md:text-sm font-bold px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 transition-colors whitespace-nowrap">
+      <i class="fas fa-xmark" aria-hidden="true"></i> ล้าง
     </button>
-    <button class="text-xs md:text-sm font-bold px-4 py-1.5 rounded-full bg-c-main hover:bg-amber-600 transition-colors whitespace-nowrap" onclick="openCertificateModal()">
-      <i class="fas fa-print"></i> พิมพ์เอกสารรับรอง
+    <button type="button" id="cert-open-btn" class="text-xs md:text-sm font-bold px-4 py-1.5 rounded-full bg-c-main hover:bg-amber-600 transition-colors whitespace-nowrap">
+      <i class="fas fa-print" aria-hidden="true"></i> พิมพ์เอกสารรับรอง
     </button>
   </div>
 
   <!-- Modal: เอกสารรับรองหน่วยคะแนน -->
-  <div id="certificate-modal" class="modal-overlay hidden">
+  <div id="certificate-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="cert-modal-title">
     <div class="bg-white rounded-xl shadow-2xl max-w-6xl w-full my-6 mx-auto overflow-hidden">
 
       <div class="no-print flex items-center justify-between px-6 py-4 bg-c-navy text-white">
-        <h3 class="font-bold text-base md:text-lg"><i class="fas fa-file-lines mr-2"></i> เอกสารรับรองหน่วยคะแนนจากสภาวิชาชีพ</h3>
-        <button onclick="closeCertificateModal()" class="text-white/80 hover:text-white text-2xl leading-none" aria-label="ปิด">&times;</button>
+        <h3 id="cert-modal-title" class="font-bold text-base md:text-lg"><i class="fas fa-file-lines mr-2" aria-hidden="true"></i> เอกสารรับรองหน่วยคะแนนจากสภาวิชาชีพ</h3>
+        <button type="button" id="cert-close-x" data-close-cert class="text-white/80 hover:text-white text-2xl leading-none" aria-label="ปิด">&times;</button>
       </div>
 
       <div class="no-print px-6 py-3 bg-amber-50 border-b border-amber-200 text-xs text-amber-800">
-        <i class="fas fa-circle-info mr-1"></i>
+        <i class="fas fa-circle-info mr-1" aria-hidden="true"></i>
         ระบบดึงข้อมูลที่มีในระบบมาใส่ให้อัตโนมัติทุกคอลัมน์ ตรวจสอบความถูกต้องอีกครั้งก่อนสั่งพิมพ์
       </div>
 
@@ -389,15 +334,14 @@
       </div>
 
       <div class="no-print flex items-center justify-end gap-2 px-6 py-4 border-t bg-gray-50">
-        <button class="text-xs md:text-sm font-bold px-4 py-2 rounded-full bg-gray-200 text-c-navy hover:bg-gray-300 transition-colors" onclick="closeCertificateModal()">ปิด</button>
-        <button class="text-xs md:text-sm font-bold px-5 py-2 rounded-full bg-c-red hover:bg-red-700 text-white transition-colors" onclick="window.print()">
-          <i class="fas fa-print"></i> สั่งพิมพ์ / บันทึกเป็น PDF
+        <button type="button" data-close-cert class="text-xs md:text-sm font-bold px-4 py-2 rounded-full bg-gray-200 text-c-navy hover:bg-gray-300 transition-colors">ปิด</button>
+        <button type="button" id="cert-print-btn" class="text-xs md:text-sm font-bold px-5 py-2 rounded-full bg-c-red hover:bg-red-700 text-white transition-colors">
+          <i class="fas fa-print" aria-hidden="true"></i> สั่งพิมพ์ / บันทึกเป็น PDF
         </button>
       </div>
 
     </div>
   </div>
 
-  <script src="app.js"></script>
 </body>
 </html>
